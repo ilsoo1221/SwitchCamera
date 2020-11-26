@@ -2,7 +2,7 @@ package com.example.switchcamera;
 
 import android.util.Log;
 
-import com.example.switchcamera.JNIListener;
+import com.example.switchcamera.SCInterface.JNIListener;
 //thread와 jniListener를 사용하기 위해 JNIDriver.java를 만들어줌 그리고 한번에 Main에서 구현
 public class JNIDriver implements JNIListener{
     private boolean mConnectFlag;

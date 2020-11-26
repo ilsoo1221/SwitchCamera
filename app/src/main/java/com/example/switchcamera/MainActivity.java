@@ -1,31 +1,34 @@
 package com.example.switchcamera;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import com.example.switchcamera.SCInterface.JNIListener;
 
-public class MainActivity extends AppCompatActivity implements JNIListener{
+public class MainActivity extends AppCompatActivity implements JNIListener {
     TextView tv;
     String str = "";
     JNIDriver mDriver;
@@ -39,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements JNIListener{
     @Override
     protected  void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.sc_main_activity);
 
 
         mDriver = new JNIDriver();
@@ -49,15 +52,20 @@ public class MainActivity extends AppCompatActivity implements JNIListener{
         }
         capturedImageHolder = (ImageView) findViewById(R.id.captured_image);
 
+        if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestCameraPermission();
+        }
+
         mCamera = getCameraInstance();
         mCamera.setDisplayOrientation(180);
+
         mPreview = new CameraPreview(this, mCamera);
         FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
         preview.addView(mPreview);
-
-
-
     }
+
+
     @Override
     protected void onPause(){
         mDriver.close();
@@ -65,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements JNIListener{
         releaseMediaRecorder();
         releaseCamera();
     }
+
     @SuppressLint("HandlerLeak")
     public Handler handler = new Handler(){
         public void handleMessage(Message msg){
@@ -116,6 +125,27 @@ public class MainActivity extends AppCompatActivity implements JNIListener{
         }
         return c;
     }
+
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private void requestCameraPermission() {
+        requestPermissions(new String[]{Manifest.permission.CAMERA}, 1001);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 1001 :
+
+                getCameraInstance();
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+
     public Bitmap grayImage(Bitmap src){
         int w = src.getWidth();
         int h = src.getHeight();
@@ -137,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements JNIListener{
     PictureCallback pictureCallback = new PictureCallback() {
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
+            System.out.println(data);
             Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
             int w = bitmap.getWidth() / 2;
             int h = bitmap.getHeight() / 2;
