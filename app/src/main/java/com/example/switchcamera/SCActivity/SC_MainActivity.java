@@ -5,19 +5,28 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.graphics.Bitmap;
@@ -35,8 +44,13 @@ import com.example.switchcamera.JNIDriver;
 import com.example.switchcamera.R;
 import com.example.switchcamera.SCInterface.JNIListener;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class SC_MainActivity extends AppCompatActivity implements JNIListener {
     TextView tv;
@@ -54,13 +68,24 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
     private CameraPreview mPreview;
     private ImageView capturedImageHolder;
     private ImageButton captureButton;
-    private Button galleryButton;
+    private ImageButton galleryButton;
+    private ImageButton saveButton;
+
+    private LinearLayout before_capture_layout;
+    private LinearLayout after_capture_layout;
+
+
+    public static int deviceWidth, deviceHeight;
 
 
     @Override
     protected  void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sc_main_activity);
+
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        deviceWidth = metrics.widthPixels;
+        deviceHeight = metrics.heightPixels;
 
 
         mDriver = new JNIDriver();
@@ -75,6 +100,8 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
         }
 
         mainFrameLayout = findViewById(R.id.main_framelayout);
+        before_capture_layout = findViewById(R.id.sc_main_activity_beforecapture);
+        after_capture_layout = findViewById(R.id.sc_main_activity_aftercapture);
         cameraPreview = findViewById(R.id.camera_preview);
 
         captureButton = (ImageButton) findViewById(R.id.button_capture);
@@ -84,6 +111,7 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
                 mCamera.takePicture(null, null, pictureCallback);
             }
         });
+
 
         galleryButton = findViewById(R.id.button_gallery);
         galleryButton.setOnClickListener(new View.OnClickListener(){
@@ -95,9 +123,33 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
             }
         });
 
+        saveButton = (ImageButton) findViewById(R.id.button_save);
+        saveButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                try {
+                    saveImage();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+
+//        LinearLayout.LayoutParams ButtonParams = new LinearLayout.LayoutParams(
+//                ViewGroup.LayoutParams.WRAP_CONTENT,
+//                deviceWidth / 15
+//        );
+//        ButtonParams.gravity = Gravity.LEFT;
+//        galleryButton.setLayoutParams(ButtonParams);
+//
+
 
         capturedImageHolder = (ImageView) findViewById(R.id.captured_image);
     }
+
+
 
     @Override
     protected void onStart() {
@@ -124,7 +176,6 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
-        System.out.println(data.getData());
         if (requestCode == 101 && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
             galleryUri = data.getData();
@@ -246,9 +297,69 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
 
             capturedImageHolder.setImageBitmap(scaleDownBitmapImage(rotatedBitmap, mPreview.getWidth(), mPreview.getHeight()));
             capturedBitmap = scaleDownBitmapImage(rotatedBitmap, mPreview.getWidth(), mPreview.getHeight());
+
+            before_capture_layout.setVisibility(View.INVISIBLE);
+            after_capture_layout.setVisibility(View.VISIBLE);
         }
     };
 
+    private void saveImage() throws Exception {
+
+
+
+        if (ActivityCompat.checkSelfPermission(SC_MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) {
+
+            long time = System.currentTimeMillis();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
+            Date dd = new Date(time);
+            String timeString = format.format(dd);
+
+            String url = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                    + File.separator + "SwitchCamera";
+
+            File file = new File(url);
+            file.mkdir();
+
+            if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+
+//                String imageFileName = url + File.separator + timeString;
+//
+//                File image = File.createTempFile(
+//                        imageFileName,  /* prefix */
+//                        ".jpg",         /* suffix */
+//                        file     /* directory */
+//                );
+//
+//                // Save a file: path for use with ACTION_VIEW intents
+//                String currentPhotoPath = image.getAbsolutePath();
+//                System.out.println(currentPhotoPath);
+//
+
+//                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//                File f = new File(path);
+//                Uri contentUri = Uri.fromFile(f);
+//                mediaScanIntent.setData(contentUri);
+//                this.sendBroadcast(mediaScanIntent);
+
+                String fileName = timeString + ".jpg";
+                File ImageFile = new File(url, fileName);
+
+                FileOutputStream out = new FileOutputStream(ImageFile);
+                Bitmap resultImage = ((BitmapDrawable) capturedImageHolder.getDrawable()).getBitmap();
+                resultImage.compress(Bitmap.CompressFormat.JPEG, 90, out);
+
+                out.flush();
+                out.close();
+
+                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                        Uri.parse("file://" + url + File.separator + fileName)));
+
+                Toast.makeText(this, "저장되었습니다.", Toast.LENGTH_SHORT).show();
+
+            }
+        }
+    }
 
 
 
@@ -279,6 +390,8 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
     public void onBackPressed() {
         if(capturedImageHolder != null){
             capturedImageHolder.setImageBitmap(null);
+            after_capture_layout.setVisibility(View.INVISIBLE);
+            before_capture_layout.setVisibility(View.VISIBLE);
         }
         else
             super.onBackPressed();

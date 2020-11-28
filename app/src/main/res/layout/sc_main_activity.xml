@@ -24,45 +24,89 @@
 
     </FrameLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="20dp"
-        android:gravity="center">
-
-
+        android:layout_height="0dp"
+        android:layout_weight="3">>
 
         <LinearLayout
+            android:id="@+id/sc_main_activity_beforecapture"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:visibility="visible"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:weightSum="3">
 
-            <Button
-                android:id="@+id/button_gallery"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:background="@drawable/gallery_button_normal"
-                android:fontFamily="sans-serif"
-                android:text="gallery"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                app:backgroundTint="@color/mainColor"
-                app:rippleColor="@color/teal_200" />
 
-            <ImageButton
-                android:id="@+id/button_capture"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/round_photo_camera_24"
-                android:background="@drawable/capture_button_normal"
-                android:padding="20dp"
-                android:text="Capture" />
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageButton
+                    android:id="@+id/button_gallery"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="20dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/round_collections_24"
+                    app:backgroundTint="@color/semiBlack"
+                    app:rippleColor="@color/teal_200" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageButton
+                    android:id="@+id/button_capture"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/capture_button_normal"
+                    android:padding="15dp"
+                    android:src="@drawable/round_photo_camera_24"
+                    android:text="Capture" />
+            </FrameLayout>
+
         </LinearLayout>
 
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/sc_main_activity_aftercapture"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:visibility="invisible"
+            android:weightSum="3">
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"></FrameLayout>
+
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageButton
+                    android:id="@+id/button_save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/capture_button_normal"
+                    android:padding="15dp"
+                    android:src="@drawable/round_done_24"
+                    android:text="Capture" />
+            </FrameLayout>
+
+        </LinearLayout>
+    </FrameLayout>
+
 
 </LinearLayout>

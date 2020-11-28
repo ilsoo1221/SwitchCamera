@@ -28,4 +28,6 @@ public class SC_ImageEditActivity extends AppCompatActivity {
 
         sc_edit_imageView.setImageURI(SC_MainActivity.galleryUri);
     }
+
+
 }
