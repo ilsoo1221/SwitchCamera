@@ -5,8 +5,7 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.media.MediaScannerConnection;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -19,12 +18,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -45,10 +40,7 @@ import com.example.switchcamera.R;
 import com.example.switchcamera.SCInterface.JNIListener;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -70,11 +62,12 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
     private ImageButton captureButton;
     private ImageButton galleryButton;
     private ImageButton saveButton;
+    private ImageButton editButton;
 
     private LinearLayout before_capture_layout;
     private LinearLayout after_capture_layout;
 
-
+    public static int ImageWidth, ImageHeight;
     public static int deviceWidth, deviceHeight;
 
 
@@ -135,15 +128,15 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
             }
         });
 
-
-
-//        LinearLayout.LayoutParams ButtonParams = new LinearLayout.LayoutParams(
-//                ViewGroup.LayoutParams.WRAP_CONTENT,
-//                deviceWidth / 15
-//        );
-//        ButtonParams.gravity = Gravity.LEFT;
-//        galleryButton.setLayoutParams(ButtonParams);
-//
+        editButton = (ImageButton) findViewById(R.id.button_edit);
+        editButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(SC_MainActivity.this, SC_ImageEditActivity.class);
+                intent.putExtra("from", "camera");
+                startActivity(intent);
+            }
+        });
 
 
         capturedImageHolder = (ImageView) findViewById(R.id.captured_image);
@@ -161,6 +154,11 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
         mPreview = new CameraPreview(this, mCamera);
         FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
         preview.addView(mPreview);
+
+        ImageWidth = deviceWidth;
+        ImageHeight = deviceHeight * 10 / 15;
+
+        System.out.println(ImageWidth + ", " + ImageHeight);
     }
 
     @Override
@@ -180,6 +178,7 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
 
             galleryUri = data.getData();
             Intent intent = new Intent(SC_MainActivity.this, SC_ImageEditActivity.class);
+            intent.putExtra("from", "gallery");
             startActivity(intent);
         }
     }
@@ -277,10 +276,13 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
         }
         return src;
     }
+
+
+
+
     PictureCallback pictureCallback = new PictureCallback() {
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-            System.out.println(data);
             Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
 
             int w = bitmap.getWidth();
@@ -295,17 +297,19 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
                 return;
             }
 
-            capturedImageHolder.setImageBitmap(scaleDownBitmapImage(rotatedBitmap, mPreview.getWidth(), mPreview.getHeight()));
-            capturedBitmap = scaleDownBitmapImage(rotatedBitmap, mPreview.getWidth(), mPreview.getHeight());
+            capturedImageHolder.setImageBitmap(resizeBitmapImage(rotatedBitmap, mPreview.getWidth(), mPreview.getHeight()));
+            capturedBitmap = resizeBitmapImage(rotatedBitmap, mPreview.getWidth(), mPreview.getHeight());
 
             before_capture_layout.setVisibility(View.INVISIBLE);
             after_capture_layout.setVisibility(View.VISIBLE);
+
         }
     };
 
+
+
+
     private void saveImage() throws Exception {
-
-
 
         if (ActivityCompat.checkSelfPermission(SC_MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -322,26 +326,6 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
             file.mkdir();
 
             if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-
-//                String imageFileName = url + File.separator + timeString;
-//
-//                File image = File.createTempFile(
-//                        imageFileName,  /* prefix */
-//                        ".jpg",         /* suffix */
-//                        file     /* directory */
-//                );
-//
-//                // Save a file: path for use with ACTION_VIEW intents
-//                String currentPhotoPath = image.getAbsolutePath();
-//                System.out.println(currentPhotoPath);
-//
-
-//                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-//                File f = new File(path);
-//                Uri contentUri = Uri.fromFile(f);
-//                mediaScanIntent.setData(contentUri);
-//                this.sendBroadcast(mediaScanIntent);
-
                 String fileName = timeString + ".jpg";
                 File ImageFile = new File(url, fileName);
 
@@ -367,7 +351,7 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
 
 
 
-    private Bitmap scaleDownBitmapImage(Bitmap bitmap, int newWidth, int newHeight) {
+    private Bitmap resizeBitmapImage(Bitmap bitmap, int newWidth, int newHeight) {
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
         return resizedBitmap;
     }
@@ -392,6 +376,10 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
             capturedImageHolder.setImageBitmap(null);
             after_capture_layout.setVisibility(View.INVISIBLE);
             before_capture_layout.setVisibility(View.VISIBLE);
+
+            mPreview = new CameraPreview(this, mCamera);
+            FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
+            preview.addView(mPreview);
         }
         else
             super.onBackPressed();
