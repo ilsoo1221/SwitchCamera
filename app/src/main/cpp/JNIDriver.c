@@ -4,7 +4,12 @@
 #include <string.h>
 #include <unistd.h>
 
+
+
+
+
 int fd = 0;
+
 
 JNIEXPORT jint JNICALL
 Java_com_example_switchcamera_JNIDriver_getInterrupt(JNIEnv *env, jobject thiz) {
