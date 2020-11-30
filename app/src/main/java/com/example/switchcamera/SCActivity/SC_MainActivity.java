@@ -44,6 +44,8 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.opencv.core.Mat;
+
 public class SC_MainActivity extends AppCompatActivity implements JNIListener {
     TextView tv;
     String str = "";

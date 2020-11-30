@@ -16,7 +16,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         mHolder = getHolder();
         mHolder.addCallback(this);
 
-
     }
 
     public void surfaceCreated(SurfaceHolder holder){
