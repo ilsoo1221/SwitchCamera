@@ -31,6 +31,7 @@ public class SC_ImageEditActivity extends AppCompatActivity {
     private FrameLayout buttonGroup;
 
     private Button cropButton;
+    private SC_ButtonFunction buttonFunction;
 
 
 
@@ -41,8 +42,12 @@ public class SC_ImageEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sc_edit_activity);
 
+
+
         sc_edit_imageView = findViewById(R.id.sc_edit_imageview);
         buttonGroup = findViewById(R.id.sc_edit_buttongroup);
+
+        buttonFunction = new SC_ButtonFunction(buttonGroup, getApplicationContext());
 
         cropButton = (Button) findViewById(R.id.edit_crop);
 
@@ -51,42 +56,18 @@ public class SC_ImageEditActivity extends AppCompatActivity {
 
 
     private void setButtonsClickListener(){
-        cropButton.setOnClickListener(new View.OnClickListener(){
+
+        cropButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
-
-                View menu = buttonGroup.getChildAt(0);
-                menu.setVisibility(View.INVISIBLE);
-
-                LayoutInflater inflater
-                        = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                );
-                params.gravity = Gravity.BOTTOM;
-
-                View v = inflater.inflate(R.layout.sc_edit_crop, null);
-                v.setLayoutParams(params);
-
-                // 여기에 버튼에 대한 모든 기능을 구현한 클래스를 만들 것. 임시로 닫는 버튼만 만들어서 테스트
-
-                ImageButton close = v.findViewById(R.id.edit_crop_close);
-                ImageButton done = v.findViewById(R.id.edit_crop_done);
-
-                close.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        buttonGroup.removeViewAt(1);
-                        buttonGroup.getChildAt(0).setVisibility(View.VISIBLE);
-                    }
-                });
-
-                //
-                buttonGroup.addView(v);
+            public void onClick(View view) {
+                buttonFunction.changeButtonTarget(cropButton);
+                buttonFunction.cropButtonClick();
             }
         });
+
+
+
+
     }
 
 

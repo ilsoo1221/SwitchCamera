@@ -8,6 +8,7 @@ cmake_minimum_required(VERSION 3.10.2)
 # Declares and names the project.
 
 project("switch_example")
+# 경로 수정할 것
 set(pathOPENCV C:/Users/user/AndroidStudioProjects/SwitchCamera/sdk)
 set(pathLIBOPENCV ${pathOPENCV}/native/libs/${ANDROID_ABI}/libopencv_java3.so)
 include_directories(${pathOPENCV}/native/jni/include)
