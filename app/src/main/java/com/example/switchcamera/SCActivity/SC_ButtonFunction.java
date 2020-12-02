@@ -33,6 +33,7 @@ public class SC_ButtonFunction {
     }
 
 
+    // 버튼 기능 구현
     public void cropButtonClick() {
 
         View menu = buttonGroup.getChildAt(0);
@@ -67,7 +68,6 @@ public class SC_ButtonFunction {
         buttonGroup.addView(v);
     }
 
-    //testestas
     public void GrayFilterClick(){
 
     }
