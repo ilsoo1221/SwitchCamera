@@ -64,7 +64,6 @@ public class SC_ButtonFunction {
             }
         });
 
-        //
         buttonGroup.addView(v);
     }
 
