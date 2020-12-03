@@ -27,9 +27,7 @@ public class SC_ButtonFunction {
     static {
         System.loadLibrary("native-lib");//native_lib를 사용하기 위해서
     }
-    static {
-        System.loadLibrary("OpenCLDriver");//OpenCLDriver를 사용하기 위해서
-    }
+
     //여기까지
 
     public SC_ButtonFunction(FrameLayout buttonGroup, Context mContext){

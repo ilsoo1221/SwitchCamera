@@ -18,7 +18,7 @@ include_directories(${pathOPENCV}/native/jni/include)
 # Gradle automatically packages shared libraries with your APK.
 add_library(lib_opencv SHARED IMPORTED)
 set_target_properties(lib_opencv PROPERTIES IMPORTED_LOCATION ${pathLIBOPENCV})
-add_library(GLES_mali STATIC IMPORTED)
+
 add_library( # Sets the name of the library.
         native-lib
 
@@ -27,14 +27,7 @@ add_library( # Sets the name of the library.
 
         # Provides a relative path to your source file(s).
         code/native-lib.cpp)
-add_library( # Sets the name of the library.
-        OpenCLDriver
 
-        # Sets the library as a shared library.
-        SHARED
-
-        # Provides a relative path to your source file(s).
-        code/OpenCLDriver.c)
 add_library( # Sets the name of the library.
         JNIDriver
 
@@ -88,10 +81,3 @@ target_link_libraries( # Specifies the target library.
         # Links the target library to the log library
         # included in the NDK.
         ${log-lib} )
-target_link_libraries( # Specifies the target library.
-        OpenCLDriver
-
-        # Links the target library to the log library
-        # included in the NDK.
-        C:/Users/user/Desktop/mpclass/OpenCL_lib_and_inlclude/lib/libGLES_mali.so ${log-lib} ${jnigraphics-lib} )
-target_include_directories(OpenCLDriver PRIVATE src/main/cpp)

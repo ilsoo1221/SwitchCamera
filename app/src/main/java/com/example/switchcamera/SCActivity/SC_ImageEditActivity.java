@@ -37,9 +37,7 @@ public class SC_ImageEditActivity extends AppCompatActivity {
     static {
         System.loadLibrary("native-lib");
     }
-    static {
-        System.loadLibrary("OpenCLDriver");
-    }
+
     //여기까지
 
 

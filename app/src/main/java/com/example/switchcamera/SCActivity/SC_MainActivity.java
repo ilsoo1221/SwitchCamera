@@ -77,9 +77,7 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
     static {
         System.loadLibrary("native-lib");
     }
-    static {
-        System.loadLibrary("OpenCLDriver");
-    }
+
     //여기까지
     static{
         if(!OpenCVLoader.initDebug()){
