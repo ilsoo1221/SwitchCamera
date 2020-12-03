@@ -1,16 +1,11 @@
+//버튼을 이용하기 위한 곳 여기서 버튼이란 하드웨어 즉, 한백전자의 하드웨어 버튼을 이용함.
+//20201203오후2시43분
 #include <stdio.h>
 #include <jni.h>
 #include <fcntl.h>
 #include <string.h>
 #include <unistd.h>
-
-
-
-
-
 int fd = 0;
-
-
 JNIEXPORT jint JNICALL
 Java_com_example_switchcamera_JNIDriver_getInterrupt(JNIEnv *env, jobject thiz) {
     // TODO: implement getInterrupt()
@@ -70,3 +65,4 @@ Java_com_example_switchcamera_JNIDriver_openDriver(JNIEnv *env, jclass clazz, js
     else
         return 1;
 }
+

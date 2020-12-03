@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat;
 
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -44,6 +45,7 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 
 public class SC_MainActivity extends AppCompatActivity implements JNIListener {
@@ -71,6 +73,23 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
 
     public static int ImageWidth, ImageHeight;
     public static int deviceWidth, deviceHeight;
+    //20201203 오후3시 추가
+    static {
+        System.loadLibrary("native-lib");
+    }
+    static {
+        System.loadLibrary("OpenCLDriver");
+    }
+    //여기까지
+    static{
+        if(!OpenCVLoader.initDebug()){
+            Log.d(TAG,"OpenCV is not loaded!");
+        }
+        else{
+            Log.d(TAG,"OpenCV is loaded");
+        }
+    }
+    //여기까지 오후3시 추가
 
 
     @Override

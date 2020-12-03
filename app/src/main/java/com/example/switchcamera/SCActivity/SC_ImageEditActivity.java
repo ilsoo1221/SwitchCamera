@@ -31,9 +31,16 @@ public class SC_ImageEditActivity extends AppCompatActivity {
     private FrameLayout buttonGroup;
 
     private Button cropButton;
+    private Button editButton; //20201203추가
     private SC_ButtonFunction buttonFunction;
-
-
+    //20201203오후 3시 추가
+    static {
+        System.loadLibrary("native-lib");
+    }
+    static {
+        System.loadLibrary("OpenCLDriver");
+    }
+    //여기까지
 
 
 
@@ -50,6 +57,7 @@ public class SC_ImageEditActivity extends AppCompatActivity {
         buttonFunction = new SC_ButtonFunction(buttonGroup, getApplicationContext());
 
         cropButton = (Button) findViewById(R.id.edit_crop);
+        editButton = (Button) findViewById(R.id.edit_filter);//20201203추가
 
         setButtonsClickListener();
     }
