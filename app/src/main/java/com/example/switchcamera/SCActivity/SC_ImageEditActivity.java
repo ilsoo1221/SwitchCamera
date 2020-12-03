@@ -3,6 +3,9 @@ package com.example.switchcamera.SCActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -30,8 +33,11 @@ public class SC_ImageEditActivity extends AppCompatActivity {
     private ImageView sc_edit_imageView;
     private FrameLayout buttonGroup;
 
-    private Button cropButton;
+    private Button cropButton, filterButton;
     private SC_ButtonFunction buttonFunction;
+
+
+    private                 ImageView                   testView;
 
 
 
@@ -42,16 +48,29 @@ public class SC_ImageEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sc_edit_activity);
 
-
-
         sc_edit_imageView = findViewById(R.id.sc_edit_imageview);
         buttonGroup = findViewById(R.id.sc_edit_buttongroup);
 
-        buttonFunction = new SC_ButtonFunction(buttonGroup, getApplicationContext());
+        buttonFunction = new SC_ButtonFunction(buttonGroup, getApplicationContext(), sc_edit_imageView);
 
         cropButton = (Button) findViewById(R.id.edit_crop);
+        filterButton = findViewById(R.id.edit_filter);
 
         setButtonsClickListener();
+
+
+        Bitmap bitmap = Bitmap.createBitmap(SC_MainActivity.ImageWidth, SC_MainActivity.ImageHeight, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        canvas.drawColor(0);
+
+        Paint paint = new Paint();
+        paint.setColor(Color.RED);
+        paint.setAlpha(100);
+        canvas.drawRect(10, 10, 100, 100, paint);
+
+
+        testView = findViewById(R.id.sc_edit_canvas);
+        testView.setImageBitmap(bitmap);
     }
 
 
@@ -65,6 +84,14 @@ public class SC_ImageEditActivity extends AppCompatActivity {
             }
         });
 
+        filterButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                System.out.println("filter click");
+                buttonFunction.filterButtonClick();
+            }
+        });
 
 
 
@@ -76,9 +103,6 @@ public class SC_ImageEditActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-
-        System.out.println(SC_MainActivity.ImageWidth + ", " + SC_MainActivity.ImageHeight);
-
         Intent intent = getIntent();
         if(intent.getStringExtra("from").equals("gallery")) {
             Bitmap bitmap = null;
@@ -89,8 +113,8 @@ public class SC_ImageEditActivity extends AppCompatActivity {
                                 SC_MainActivity.galleryUri
                 );
                 resultBitmap = resizeBitmapImage(bitmap, SC_MainActivity.ImageWidth, SC_MainActivity.ImageHeight);
+                buttonFunction.setmBitmap(resultBitmap);
                 sc_edit_imageView.setImageBitmap(resultBitmap);
-                System.out.println("result : " + resultBitmap.getWidth() + " , " + resultBitmap.getHeight());
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -99,8 +123,8 @@ public class SC_ImageEditActivity extends AppCompatActivity {
         else if(intent.getStringExtra("from").equals("camera")) {
             Bitmap resultBitmap
                     = resizeBitmapImage(SC_MainActivity.capturedBitmap, SC_MainActivity.ImageWidth, SC_MainActivity.ImageHeight);
+            buttonFunction.setmBitmap(resultBitmap);
             sc_edit_imageView.setImageBitmap(resultBitmap);
-            System.out.println("result : " + resultBitmap.getWidth() + " , " + resultBitmap.getHeight());
         }
     }
 

@@ -14,17 +14,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/sc_edit_imageview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="10"
-            tools:srcCompat="@tools:sample/avatars" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="10">
+
+            <ImageView
+                android:id="@+id/sc_edit_imageview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <ImageView
+                android:id="@+id/sc_edit_canvas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:srcCompat="@tools:sample/avatars" />
+        </FrameLayout>
 
         <FrameLayout
             android:id="@+id/sc_edit_buttongroup"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="5">
 
             <HorizontalScrollView
@@ -46,6 +57,16 @@
                         android:background="@android:color/transparent"
                         android:drawableTop="@drawable/round_crop_24"
                         android:text="자르기"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/edit_backgroun_test"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:drawableTop="@drawable/round_crop_rotate_24"
+                        android:text="회전"
                         android:textColor="@color/white"
                         android:textStyle="bold" />
 
@@ -76,16 +97,6 @@
                         android:background="@android:color/transparent"
                         android:drawableTop="@drawable/round_wallpaper_24"
                         android:text="배경"
-                        android:textColor="@color/white"
-                        android:textStyle="bold" />
-
-                    <Button
-                        android:id="@+id/edit_backgroun_test"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
-                        android:drawableTop="@drawable/round_tune_24"
-                        android:text="스크롤테스"
                         android:textColor="@color/white"
                         android:textStyle="bold" />
 
