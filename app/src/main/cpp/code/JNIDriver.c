@@ -70,3 +70,4 @@ Java_com_example_switchcamera_JNIDriver_openDriver(JNIEnv *env, jclass clazz, js
     else
         return 1;
 }
+
