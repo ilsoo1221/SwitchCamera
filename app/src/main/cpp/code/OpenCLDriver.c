@@ -12,7 +12,7 @@
 #include <android/log.h>
 #include <android/bitmap.h>
 #include <CL/opencl.h>
-#include "../../../../../../AppData/Local/Android/Sdk/ndk/21.1.6352462/toolchains/llvm/prebuilt/windows-x86_64/sysroot/usr/include/jni.h"
+#include "jni.h"
 
 #define LOG_TAG "DEBUG"
 //#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS)

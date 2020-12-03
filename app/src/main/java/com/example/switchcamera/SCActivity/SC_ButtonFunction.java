@@ -73,6 +73,8 @@ public class SC_ButtonFunction {
             }
         });
 
+
+
         buttonGroup.addView(v);
     }
     //필터 버튼에 대한 동작
