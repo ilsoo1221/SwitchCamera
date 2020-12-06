@@ -11,24 +11,40 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:weightSum="15"
+
+        android:clickable="false"
+        android:focusable="false"
+
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:clickable="false"
+            android:focusable="false"
             android:layout_weight="10">
 
             <ImageView
                 android:id="@+id/sc_edit_imageview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+
+                android:clickable="false"
+                android:focusable="false"
+                android:layout_gravity="center"
+
                 tools:srcCompat="@tools:sample/avatars" />
 
             <ImageView
                 android:id="@+id/sc_edit_canvas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_gravity="center"
+
                 tools:srcCompat="@tools:sample/avatars" />
         </FrameLayout>
 

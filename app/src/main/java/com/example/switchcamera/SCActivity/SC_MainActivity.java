@@ -89,6 +89,23 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
     }
     //여기까지 오후3시 추가
 
+    //20201203 오후3시 추가
+    static {
+        System.loadLibrary("native-lib");
+    }
+
+    //여기까지
+    static{
+        if(!OpenCVLoader.initDebug()){
+            Log.d(TAG,"OpenCV is not loaded!");
+        }
+        else{
+            Log.d(TAG,"OpenCV is loaded");
+        }
+    }
+    //여기까지 오후3시 추가
+
+
 
     @Override
     protected  void onCreate(Bundle savedInstanceState){
