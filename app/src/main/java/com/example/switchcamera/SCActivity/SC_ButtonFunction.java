@@ -110,8 +110,22 @@ public class SC_ButtonFunction {
                 int ll = currLeft, tt = currTop, rl = currRight - currLeft, bt  = currBottom - currTop;
                 System.out.println(ll + " , " + tt + " , " + rl + " , " + bt);
                 Bitmap resultBitmap
-                        = Bitmap.createBitmap(res, ll, tt, rl, bt - ViewRange);
-                mImageView.setImageBitmap(resultBitmap);
+                        = Bitmap.createBitmap(res, ll + ViewRange, tt + ViewRange, rl - ViewRange * 2, bt - ViewRange * 2);
+
+                mImageView.setImageBitmap(resizeBitmapImage(resultBitmap,
+                        SC_MainActivity.ImageWidth - ViewRange * 2,
+                        SC_MainActivity.ImageHeight - ViewRange * 2)
+                );
+            }
+        });
+
+        ImageButton close = v.findViewById(R.id.edit_crop_close);
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buttonGroup.removeViewAt(1);
+                buttonGroup.getChildAt(0).setVisibility(View.VISIBLE);
+                canvas.drawRect(0, 0, CanvasWidth, CanvasHeight, paints[0]);
             }
         });
     }
@@ -500,4 +514,8 @@ public class SC_ButtonFunction {
 
 
 
+    private Bitmap resizeBitmapImage(Bitmap bitmap, int newWidth, int newHeight) {
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
+        return resizedBitmap;
+    }
 }
