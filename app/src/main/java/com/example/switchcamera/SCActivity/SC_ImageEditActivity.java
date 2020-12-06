@@ -31,13 +31,14 @@ import androidx.appcompat.app.AppCompatActivity;
 public class SC_ImageEditActivity extends AppCompatActivity {
 
     private ImageView sc_edit_imageView;
+    private ImageView sc_edit_canvasView;
     private FrameLayout buttonGroup;
 
     private Button cropButton, filterButton;
     private SC_ButtonFunction buttonFunction;
 
+    private int ViewRange;
 
-    private                 ImageView                   testView;
 
 
 
@@ -49,28 +50,17 @@ public class SC_ImageEditActivity extends AppCompatActivity {
         setContentView(R.layout.sc_edit_activity);
 
         sc_edit_imageView = findViewById(R.id.sc_edit_imageview);
+        sc_edit_canvasView = findViewById(R.id.sc_edit_canvas);
+
         buttonGroup = findViewById(R.id.sc_edit_buttongroup);
 
-        buttonFunction = new SC_ButtonFunction(buttonGroup, getApplicationContext(), sc_edit_imageView);
+        buttonFunction = new SC_ButtonFunction(buttonGroup, getApplicationContext(), sc_edit_imageView, sc_edit_canvasView);
 
         cropButton = (Button) findViewById(R.id.edit_crop);
         filterButton = findViewById(R.id.edit_filter);
 
         setButtonsClickListener();
 
-
-        Bitmap bitmap = Bitmap.createBitmap(SC_MainActivity.ImageWidth, SC_MainActivity.ImageHeight, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        canvas.drawColor(0);
-
-        Paint paint = new Paint();
-        paint.setColor(Color.RED);
-        paint.setAlpha(100);
-        canvas.drawRect(10, 10, 100, 100, paint);
-
-
-        testView = findViewById(R.id.sc_edit_canvas);
-        testView.setImageBitmap(bitmap);
     }
 
 
@@ -83,6 +73,8 @@ public class SC_ImageEditActivity extends AppCompatActivity {
                 buttonFunction.cropButtonClick();
             }
         });
+
+
 
         filterButton.setOnClickListener(new View.OnClickListener(){
 
@@ -107,12 +99,14 @@ public class SC_ImageEditActivity extends AppCompatActivity {
         if(intent.getStringExtra("from").equals("gallery")) {
             Bitmap bitmap = null;
             Bitmap resultBitmap = null;
+            ViewRange = SC_MainActivity.ImageWidth / 30 / 2;
+
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(
                                 getApplicationContext().getContentResolver(),
                                 SC_MainActivity.galleryUri
                 );
-                resultBitmap = resizeBitmapImage(bitmap, SC_MainActivity.ImageWidth, SC_MainActivity.ImageHeight);
+                resultBitmap = resizeBitmapImage(bitmap, SC_MainActivity.ImageWidth - ViewRange * 2, SC_MainActivity.ImageHeight - ViewRange * 2);
                 buttonFunction.setmBitmap(resultBitmap);
                 sc_edit_imageView.setImageBitmap(resultBitmap);
 
@@ -121,25 +115,16 @@ public class SC_ImageEditActivity extends AppCompatActivity {
             }
         }
         else if(intent.getStringExtra("from").equals("camera")) {
+
+            ViewRange = SC_MainActivity.ImageWidth / 30 / 2;
+
             Bitmap resultBitmap
-                    = resizeBitmapImage(SC_MainActivity.capturedBitmap, SC_MainActivity.ImageWidth, SC_MainActivity.ImageHeight);
+                    = resizeBitmapImage(SC_MainActivity.capturedBitmap, SC_MainActivity.ImageWidth - ViewRange * 2, SC_MainActivity.ImageHeight - ViewRange * 2);
+
             buttonFunction.setmBitmap(resultBitmap);
             sc_edit_imageView.setImageBitmap(resultBitmap);
         }
     }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if(hasFocus) {
-            System.out.println("result : " + sc_edit_imageView.getWidth() + " , " + sc_edit_imageView.getHeight());
-            Bitmap bitmap = ((BitmapDrawable) sc_edit_imageView.getDrawable()).getBitmap();
-            System.out.println("result : " + bitmap.getWidth() + " , " + bitmap.getHeight());
-        }
-
-    }
-
-
 
     private Bitmap resizeBitmapImage(Bitmap bitmap, int newWidth, int newHeight) {
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
