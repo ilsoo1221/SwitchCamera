@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
     android:background="@color/black">
 
     <LinearLayout
@@ -17,10 +18,43 @@
             android:layout_height="wrap_content">
 
             <LinearLayout
+                android:id="@+id/rotate_buttons"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
+                <Button
+                    android:id="@+id/rotate_90"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:background="@android:color/transparent"
+                    android:drawableTop="@drawable/round_rotate_90_degrees_ccw_24"
+                    android:text="90"
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
+
+                <Button
+                    android:id="@+id/rotate_180"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:background="@android:color/transparent"
+                    android:drawableTop="@drawable/round_rotate_90_degrees_ccw_24"
+                    android:text="180"
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
+
+                <Button
+                    android:id="@+id/rotate_270"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:background="@android:color/transparent"
+                    android:drawableTop="@drawable/round_rotate_90_degrees_ccw_24"
+                    android:text="270"
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
 
             </LinearLayout>
         </HorizontalScrollView>
@@ -48,7 +82,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="회전하기"
+                android:text="ROTATE"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="18sp"
@@ -68,11 +102,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
-    <SeekBar
-        android:id="@+id/edit_seekbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

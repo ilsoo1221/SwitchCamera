@@ -3,18 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
     android:background="@color/black">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:layout_gravity="bottom"
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent">
 
         <HorizontalScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -25,28 +29,35 @@
                     android:id="@+id/crop_normal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
                     android:background="@android:color/transparent"
                     android:drawableTop="@drawable/round_crop_portrait_24"
-                    android:text="원본"
-                    android:textColor="@color/white" />
+                    android:text="original"
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
 
                 <Button
                     android:id="@+id/crop_free"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    android:drawableTop="@drawable/round_crop_square_24"
-                    android:text="정방"
+                    android:drawableTop="@drawable/round_crop_free_24"
+                    android:drawableTint="@color/white"
+                    android:layout_marginHorizontal="5dp"
+                    android:text="free"
                     android:textColor="@color/white" />
 
                 <Button
                     android:id="@+id/crop_square"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
                     android:background="@android:color/transparent"
-                    android:drawableTop="@drawable/round_crop_free_24"
-                    android:text="자유"
-                    android:textColor="@color/white" />
+                    android:drawableTop="@drawable/round_crop_square_24"
+                    android:drawableTint="@color/white"
+                    android:text="square"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
 
                 <Button
                     android:id="@+id/crop_2_3"
@@ -54,6 +65,8 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:drawableTop="@drawable/round_crop_3_2_24"
+                    android:drawableTint="@color/white"
+                    android:layout_marginHorizontal="5dp"
                     android:text="2:3"
                     android:textColor="@color/white" />
 
@@ -63,6 +76,7 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:drawableTop="@drawable/round_crop_5_4_24"
+                    android:layout_marginHorizontal="5dp"
                     android:text="4:5"
                     android:textColor="@color/white" />
 
@@ -72,6 +86,8 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:drawableTop="@drawable/round_crop_7_5_24"
+                    android:drawableTint="@color/white"
+                    android:layout_marginHorizontal="5dp"
                     android:text="5:7"
                     android:textColor="@color/white" />
 
@@ -81,7 +97,9 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:drawableTop="@drawable/round_crop_16_9_24"
-                    android:text="9_16"
+                    android:drawableTint="@color/white"
+                    android:layout_marginHorizontal="5dp"
+                    android:text="9:16"
                     android:textColor="@color/white" />
 
             </LinearLayout>
@@ -103,6 +121,7 @@
                 android:background="@android:color/transparent"
                 android:gravity="left"
                 android:textColor="@color/white"
+                android:tint="@color/white"
                 android:src="@drawable/round_close_24"/>
 
             <TextView
@@ -110,7 +129,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="자르기"
+                android:text="CROP"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="18sp"
@@ -125,6 +144,7 @@
                 android:gravity="right"
                 android:layout_gravity="right"
                 android:textColor="@color/white"
+                android:tint="@color/white"
                 android:src="@drawable/round_done_24"/>
         </LinearLayout>
 

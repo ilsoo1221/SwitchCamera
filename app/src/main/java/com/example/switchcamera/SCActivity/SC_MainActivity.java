@@ -72,6 +72,7 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
     private LinearLayout after_capture_layout;
 
     public static int ImageWidth, ImageHeight;
+    public static int fImageWidth, fImageHeight;
     public static int deviceWidth, deviceHeight;
     //20201203 오후3시 추가
     static {
@@ -181,6 +182,9 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
 
         ImageWidth = deviceWidth;
         ImageHeight = deviceHeight * 10 / 15;
+
+        fImageWidth = ImageWidth;
+        fImageHeight = ImageHeight;
 
         System.out.println(ImageWidth + ", " + ImageHeight);
     }

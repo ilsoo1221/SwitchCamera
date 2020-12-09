@@ -1,32 +1,20 @@
 package com.example.switchcamera.SCActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.provider.MediaStore;
-import android.text.Layout;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.switchcamera.R;
 
 import java.io.IOException;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 public class SC_ImageEditActivity extends AppCompatActivity {
 
@@ -69,7 +57,7 @@ public class SC_ImageEditActivity extends AppCompatActivity {
         cropButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //buttonFunction.changeButtonTarget(cropButton);
+                buttonFunction.changeButtonTarget(cropButton);
                 buttonFunction.cropButtonClick();
             }
         });
@@ -80,7 +68,7 @@ public class SC_ImageEditActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-               // buttonFunction.changeButtonTarget(filterButton);
+                System.out.println("filter click");
                 buttonFunction.filterButtonClick();
             }
         });
@@ -91,11 +79,11 @@ public class SC_ImageEditActivity extends AppCompatActivity {
 
 
 
-    @Override//실행되었을때
+    @Override
     protected void onStart() {
         super.onStart();
 
-        Intent intent = getIntent(); //화면간 전환할 때 어떤 화면에서 데이터를 받아오면서 사용
+        Intent intent = getIntent();
         if(intent.getStringExtra("from").equals("gallery")) {
             Bitmap bitmap = null;
             Bitmap resultBitmap = null;
@@ -103,8 +91,8 @@ public class SC_ImageEditActivity extends AppCompatActivity {
 
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(
-                                getApplicationContext().getContentResolver(),
-                                SC_MainActivity.galleryUri
+                        getApplicationContext().getContentResolver(),
+                        SC_MainActivity.galleryUri
                 );
                 resultBitmap = resizeBitmapImage(bitmap, SC_MainActivity.ImageWidth - ViewRange * 2, SC_MainActivity.ImageHeight - ViewRange * 2);
                 buttonFunction.setmBitmap(resultBitmap);

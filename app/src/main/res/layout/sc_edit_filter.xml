@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
     android:background="@color/black">
 
     <LinearLayout
@@ -27,7 +28,25 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:drawableTop="@drawable/round_panorama_fish_eye_24"
-                    android:text="원본"
+                    android:text="canny"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/filter_gray"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:drawableTop="@drawable/round_brightness_4_24"
+                    android:text="gray"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/filter_blur"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:drawableTop="@drawable/round_blur_on_24"
+                    android:text="blur"
                     android:textColor="@color/white" />
 
 
@@ -42,7 +61,7 @@
             android:weightSum="3">
 
             <ImageButton
-                android:id="@+id/edit_crop_close"
+                android:id="@+id/edit_filter_close"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -64,7 +83,7 @@
                 android:textStyle="bold" />
 
             <ImageButton
-                android:id="@+id/edit_crop_done"
+                android:id="@+id/edit_filter_done"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
