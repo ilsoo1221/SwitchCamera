@@ -112,7 +112,7 @@ public class SC_ButtonFunction extends AppCompatActivity {
         });
 
 
-        ImageButton done = v.findViewById(R.id.edit_rotate_done);
+        ImageButton done = v.findViewById(R.id.edit_crop_done);
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -152,7 +152,7 @@ public class SC_ButtonFunction extends AppCompatActivity {
             }
         });
 
-        ImageButton close = v.findViewById(R.id.edit_rotate_close);
+        ImageButton close = v.findViewById(R.id.edit_crop_close);
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
