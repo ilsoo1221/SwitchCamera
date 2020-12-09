@@ -89,21 +89,7 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
     }
     //여기까지 오후3시 추가
 
-    //20201203 오후3시 추가
-    static {
-        System.loadLibrary("native-lib");
-    }
 
-    //여기까지
-    static{
-        if(!OpenCVLoader.initDebug()){
-            Log.d(TAG,"OpenCV is not loaded!");
-        }
-        else{
-            Log.d(TAG,"OpenCV is loaded");
-        }
-    }
-    //여기까지 오후3시 추가
 
 
 
@@ -116,13 +102,12 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
         deviceWidth = metrics.widthPixels;
         deviceHeight = metrics.heightPixels;
 
-
         mDriver = new JNIDriver();
         mDriver.setListener(this);
         if(mDriver.open("/dev/sm9s5422_interrupt")<0){
             Toast.makeText(SC_MainActivity.this,"Driver Open Failed", Toast.LENGTH_SHORT).show();
         }
-
+        //permission check
         if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             requestCameraPermission();
@@ -132,8 +117,9 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
         before_capture_layout = findViewById(R.id.sc_main_activity_beforecapture);
         after_capture_layout = findViewById(R.id.sc_main_activity_aftercapture);
         cameraPreview = findViewById(R.id.camera_preview);
-
         captureButton = (ImageButton) findViewById(R.id.button_capture);
+
+        //캡쳐버튼이 눌리면 사진을 찍는다
         captureButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -143,16 +129,18 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
 
 
         galleryButton = findViewById(R.id.button_gallery);
+        //갤러리 버튼이 눌리면
         galleryButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);//인텐트 생성
+                intent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");//인텐트의 데이터 정보 이미지
                 startActivityForResult(intent, 101);
             }
         });
 
         saveButton = (ImageButton) findViewById(R.id.button_save);
+        //save버튼이 눌리면
         saveButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -244,6 +232,7 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
             }
         }
     };
+
     @Override
     protected  void onResume(){
         super.onResume();
@@ -372,9 +361,9 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
                 out.flush();
                 out.close();
 
+
                 sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                         Uri.parse("file://" + url + File.separator + fileName)));
-
                 Toast.makeText(this, "저장되었습니다.", Toast.LENGTH_SHORT).show();
 
             }
@@ -401,10 +390,6 @@ public class SC_MainActivity extends AppCompatActivity implements JNIListener {
         return  Bitmap.createBitmap(src, 0, 0, src.getWidth()/2, src.getHeight()/2, mtx1, true);
     }
 
-    public Bitmap resizeBitmap(Bitmap src, int width, int height){
-        Matrix mtx1 = new Matrix();
-        return  Bitmap.createBitmap(src, 0, 0, width, height, mtx1, true);
-    }
 
     @Override
     public void onBackPressed() {

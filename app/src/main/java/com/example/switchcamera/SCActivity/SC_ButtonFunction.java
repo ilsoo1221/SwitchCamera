@@ -1,5 +1,6 @@
 package com.example.switchcamera.SCActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -48,19 +49,14 @@ public class SC_ButtonFunction {
     private                 Canvas                      canvas;
     private                 Bitmap                      cropBitmap;
 
-
+//어떤 흐름으로 동작하는 지 Context
     public SC_ButtonFunction(FrameLayout buttonGroup, Context mContext, ImageView mImageView, ImageView canvasView){
         this.buttonGroup = buttonGroup;
         this.mContext = mContext;
         this.mImageView = mImageView;
         this.canvasView = canvasView;
-
+        //view를 동적으로 생성할 때 사용하는 게 인플레이터
         inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-
-
-
-
     }
 
 
@@ -68,7 +64,9 @@ public class SC_ButtonFunction {
     public void changeButtonTarget(Button changedButton){
         this.targetButton = changedButton;
     }
-    public void setmBitmap(Bitmap bitmap){ this.mBitmap = bitmap; }
+    public void setmBitmap(Bitmap bitmap){
+        this.mBitmap = bitmap;
+    }
 
 
 
@@ -131,34 +129,35 @@ public class SC_ButtonFunction {
     }
 
     // CROP 기능을 위한 선택 영역 표현
+    //캔버스 도화지를 깔고 makepaint 도형을 그린다.
     private void makePaints(){
 
-        Paint clearPaint = new Paint();
+        Paint clearPaint = new Paint();//캔버스 자체를 지운다
         clearPaint.setColor(Color.TRANSPARENT);
         Xfermode xmode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
         clearPaint.setXfermode(xmode);
 
-        Paint backgroundPaint = new Paint();
-        backgroundPaint.setAntiAlias(true);
+        Paint backgroundPaint = new Paint();//약간 어둡게
+        backgroundPaint.setAntiAlias(true);//불투명도 적용
         backgroundPaint.setColor(Color.BLACK);
         backgroundPaint.setAlpha(100);
 
-        Paint StrokePaint = new Paint();
+        Paint StrokePaint = new Paint();//네모를 그린다
         StrokePaint.setStyle(Paint.Style.STROKE);
         StrokePaint.setStrokeCap(Paint.Cap.ROUND);
         StrokePaint.setColor(Color.WHITE);
         StrokePaint.setStrokeWidth(3);
 
-        Paint FillPaint = new Paint();
+        Paint FillPaint = new Paint();//네모안에 있는 부분도 적용
         FillPaint.setStyle(Paint.Style.FILL);
         FillPaint.setColor(Color.TRANSPARENT);
         Xfermode FillMode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
         FillPaint.setXfermode(FillMode);
 
-        Paint circlePaint = new Paint();
+        Paint circlePaint = new Paint();//하얀색 원
         circlePaint.setStyle(Paint.Style.FILL);
         circlePaint.setColor(Color.WHITE);
-
+        //배열로 저장해놓은다.
         paints = new Paint[]{
                 clearPaint, backgroundPaint, StrokePaint, FillPaint, circlePaint
         };
@@ -167,7 +166,7 @@ public class SC_ButtonFunction {
     private void setCanvas(int width, int height){
 
         ViewRange = SC_MainActivity.ImageWidth / 30 / 2;
-        TouchRange = SC_MainActivity.ImageWidth / 30 * 2;
+        TouchRange = SC_MainActivity.ImageWidth / 30 * 2; //동그라미부분 터치되는 부분이 더 커진다
 
         DrawStatus = "none";
 
@@ -176,10 +175,10 @@ public class SC_ButtonFunction {
         CanvasWidth = SC_MainActivity.ImageWidth;
         CanvasHeight = SC_MainActivity.ImageHeight;
 
-        int ImgWidth = CanvasWidth - ViewRange * 2;
+        int ImgWidth = CanvasWidth - ViewRange * 2; //이미지 크기
         int ImgHeight = CanvasHeight - ViewRange * 2;
 
-        int tlX, tlY;
+        int tlX, tlY;   //top left x,y
         int trX, trY;
         int blX, blY;
         int brX, brY;
@@ -216,17 +215,18 @@ public class SC_ButtonFunction {
             blX = ViewRange; blY = CanvasHeight - ViewRange;
             brX = CanvasWidth - ViewRange; brY = CanvasHeight - ViewRange;
         }
+
         currTop = tlY; currLeft = tlX; currBottom = brY; currRight = brX;
 
-        cropBitmap = Bitmap.createBitmap(CanvasWidth, CanvasHeight, Bitmap.Config.ARGB_8888);
+        cropBitmap = Bitmap.createBitmap(CanvasWidth, CanvasHeight, Bitmap.Config.ARGB_8888);//캔버스를 만들 때도 비트맵 형식으로 한다
         canvas = new Canvas(cropBitmap);
-        canvas.drawColor(0);
+        canvas.drawColor(0);//transparent
 
         canvas.drawRect(0, 0, CanvasWidth, CanvasHeight, paints[0]);
         canvas.drawRect(0, 0, CanvasWidth, CanvasHeight, paints[1]);
 
         canvas.drawRect(tlX, tlY, brX, brY, paints[2]);
-        canvas.drawRect(tlX, tlY, brX, brY, paints[3]);
+        canvas.drawRect(tlX, tlY, brX, brY, paints[3]);//테두리 그리고 붙루명한거 없애주고
         canvas.drawCircle(tlX, tlY, ViewRange, paints[4]);
         canvas.drawCircle(trX, trY, ViewRange, paints[4]);
         canvas.drawCircle(blX, blY, ViewRange, paints[4]);
@@ -234,6 +234,7 @@ public class SC_ButtonFunction {
         canvasView.setImageBitmap(cropBitmap);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void crop_FreeClick(){
         canvasView.setOnTouchListener(new View.OnTouchListener(){
 
@@ -242,7 +243,7 @@ public class SC_ButtonFunction {
 
                 if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
 
-                    int x = (int)motionEvent.getX();
+                    int x = (int)motionEvent.getX();//눌렀을때 좌표
                     int y = (int)motionEvent.getY();
 
                     if(x >= 0 && y >= 0 && x <= SC_MainActivity.ImageWidth && y <= SC_MainActivity.ImageHeight) {
@@ -276,8 +277,8 @@ public class SC_ButtonFunction {
 
                     int x = (int)motionEvent.getX();
                     int y = (int)motionEvent.getY();
-
-                    if(x < ViewRange) x = ViewRange;
+                    //선택영역 밖에 안나가게
+                    if(x < ViewRange) x = ViewRange;//viewRange 동그라미 반지름
                     if(x > CanvasWidth - ViewRange) x = CanvasWidth - ViewRange;
                     if(y < ViewRange) y = ViewRange;
                     if(y > CanvasHeight - ViewRange) y = CanvasHeight - ViewRange;
@@ -331,7 +332,7 @@ public class SC_ButtonFunction {
                     int x = (int)motionEvent.getX();
                     int y = (int)motionEvent.getY();
 
-                    prevX = x; prevY  = y;
+                    prevX = x; prevY  = y; //원래 손가락으로 찍은 이전좌표
 
                     if(x >= 0 && y >= 0 && x <= SC_MainActivity.ImageWidth && y <= SC_MainActivity.ImageHeight) {
 

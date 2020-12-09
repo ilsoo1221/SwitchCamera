@@ -69,7 +69,7 @@ public class SC_ImageEditActivity extends AppCompatActivity {
         cropButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                buttonFunction.changeButtonTarget(cropButton);
+                //buttonFunction.changeButtonTarget(cropButton);
                 buttonFunction.cropButtonClick();
             }
         });
@@ -80,7 +80,7 @@ public class SC_ImageEditActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                System.out.println("filter click");
+               // buttonFunction.changeButtonTarget(filterButton);
                 buttonFunction.filterButtonClick();
             }
         });
@@ -91,11 +91,11 @@ public class SC_ImageEditActivity extends AppCompatActivity {
 
 
 
-    @Override
+    @Override//실행되었을때
     protected void onStart() {
         super.onStart();
 
-        Intent intent = getIntent();
+        Intent intent = getIntent(); //화면간 전환할 때 어떤 화면에서 데이터를 받아오면서 사용
         if(intent.getStringExtra("from").equals("gallery")) {
             Bitmap bitmap = null;
             Bitmap resultBitmap = null;
