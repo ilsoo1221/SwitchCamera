@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/black">
 
     <LinearLayout
@@ -74,7 +74,7 @@
             android:weightSum="3">
 
             <ImageButton
-                android:id="@+id/edit_crop_close"
+                android:id="@+id/edit_rotate_close"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -96,7 +96,7 @@
                 android:textStyle="bold" />
 
             <ImageButton
-                android:id="@+id/edit_crop_done"
+                android:id="@+id/edit_rotate_done"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"

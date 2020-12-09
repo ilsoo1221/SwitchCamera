@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:weightSum="15"
+        android:weightSum="17"
 
         android:clickable="false"
         android:focusable="false"
@@ -18,12 +18,65 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:weightSum="10"
+            android:layout_marginHorizontal="20dp"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:background="@android:color/transparent"
+                android:layout_weight="1"
+                android:src="@drawable/round_close_24" />
+
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.5" />
+
+            <ImageButton
+                android:id="@+id/sc_edit_undo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:layout_weight="1.5"
+                android:src="@drawable/round_undo_24" />
+
+            <ImageButton
+                android:id="@+id/sc_edit_redo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:layout_weight="1.5"
+                android:src="@drawable/round_redo_24" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.5" />
+
+            <ImageButton
+                android:id="@+id/sc_edit_done"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:layout_weight="1"
+                android:src="@drawable/round_done_24" />
+        </LinearLayout>
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:clickable="false"
             android:focusable="false"
-            android:layout_weight="10">
+            android:layout_weight="11">
 
             <ImageView
                 android:id="@+id/sc_edit_imageview"
@@ -52,12 +105,14 @@
             android:id="@+id/sc_edit_buttongroup"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:foregroundGravity="bottom"
             android:layout_weight="5">
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom">
+                android:layout_gravity="bottom"
+                android:scrollbars="none">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -72,17 +127,17 @@
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
                         android:drawableTop="@drawable/round_crop_24"
-                        android:text="자르기"
+                        android:text="CROP"
                         android:textColor="@color/white"
                         android:textStyle="bold" />
 
                     <Button
-                        android:id="@+id/edit_backgroun_test"
+                        android:id="@+id/edit_rotate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
                         android:drawableTop="@drawable/round_crop_rotate_24"
-                        android:text="회전"
+                        android:text="ROTATE"
                         android:textColor="@color/white"
                         android:textStyle="bold" />
 
@@ -92,17 +147,7 @@
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
                         android:drawableTop="@drawable/round_photo_filter_24"
-                        android:text="필터"
-                        android:textColor="@color/white"
-                        android:textStyle="bold" />
-
-                    <Button
-                        android:id="@+id/edit_tune"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
-                        android:drawableTop="@drawable/round_tune_24"
-                        android:text="조정"
+                        android:text="FILTER"
                         android:textColor="@color/white"
                         android:textStyle="bold" />
 
@@ -112,7 +157,7 @@
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
                         android:drawableTop="@drawable/round_wallpaper_24"
-                        android:text="배경"
+                        android:text="BACKGROUND"
                         android:textColor="@color/white"
                         android:textStyle="bold" />
 
