@@ -53,8 +53,6 @@ public class SC_ImageEditActivity extends AppCompatActivity {
 
 
 
-
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,8 +80,10 @@ public class SC_ImageEditActivity extends AppCompatActivity {
     }
 
 
+    // 각 버튼 클릭 기능 모아둔 함수
     private void setButtonsClickListener(){
 
+        // 재실행 버튼 클릭. 리스트 인덱스의 뒤쪽으로 이동한다.
         redoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,6 +96,7 @@ public class SC_ImageEditActivity extends AppCompatActivity {
             }
         });
 
+        // 되돌리기 버튼 클릭. 리스트 인덱스의 앞쪽으로 이동한다.
         undoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -158,8 +159,10 @@ public class SC_ImageEditActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        // 일단 사진 찍은거나 갤러리에서 가져온 이미지를 리사이징해 이미지 뷰에 붙이기
         if(sc_edit_imageView.getDrawable() == null) {
             Intent intent = getIntent();
+            // 갤러리에서 가져온 이미지를 넘겨주는 인텐트라면-
             if (intent.getStringExtra("from").equals("gallery")) {
                 Bitmap bitmap = null;
                 Bitmap resultBitmap = null;
@@ -178,6 +181,7 @@ public class SC_ImageEditActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                // 카메라로 찍은 이미지를 넘겨주는 인텐트라면-
             } else if (intent.getStringExtra("from").equals("camera")) {
 
                 ViewRange = SC_MainActivity.fImageWidth / 30 / 2;
@@ -192,6 +196,7 @@ public class SC_ImageEditActivity extends AppCompatActivity {
         }
     }
 
+    // 배경으로 쓸 이미지를 찾으러 갤러리 접근하기. 인텐트로 갤러리에 접근하고 밑에 있는 onActivityResult 메소드에서 찾은 이미지를 메인 이미지뷰에 보여주게끔 만듬.
     public void accessGallery(){
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");

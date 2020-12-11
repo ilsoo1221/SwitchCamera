@@ -62,7 +62,7 @@ public class SC_ButtonFunction extends AppCompatActivity {
 
 
 
-
+    // 생성자
     public SC_ButtonFunction(FrameLayout buttonGroup, Context mContext, ImageView mImageView, ImageView canvasView,
                              SC_ImageEditActivity sc_imageEditActivity){
         this.sc_imageEditActivity = sc_imageEditActivity;
@@ -77,6 +77,7 @@ public class SC_ButtonFunction extends AppCompatActivity {
         setBackgroundPath();
     }
 
+    // 메인 비트맵 가져오기
     public void setmBitmap(Bitmap bitmap){ this.mBitmap = bitmap; }
 
 
@@ -88,12 +89,17 @@ public class SC_ButtonFunction extends AppCompatActivity {
     // CROP 기능 관련 영역..............................................................................
     public void cropButtonClick() {
 
+        // 인플레이터로 뷰 동적 생성
         View v = inflater.inflate(R.layout.sc_edit_crop, null);
 
+        // 버튼 공통 디자인 대략적으로 잡기
         commonButtonClick(v);
+
+        // crop 선택 영역을 위한 캔버스 초기화
         setCanvas(0, 0);
         canvas.drawRect(0, 0, CanvasWidth, CanvasHeight, paints[0]);
 
+        // free 버튼 클릭
         Button cropFreeButton = v.findViewById(R.id.crop_free);
         cropFreeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,6 +108,8 @@ public class SC_ButtonFunction extends AppCompatActivity {
                 crop_FreeClick();
             }
         });
+
+        // 2:3 버튼 클릭
         Button crop2_3Button = v.findViewById(R.id.crop_2_3);
         crop2_3Button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,20 +119,25 @@ public class SC_ButtonFunction extends AppCompatActivity {
             }
         });
 
-
+        // 완료 버튼 클릭
         ImageButton done = v.findViewById(R.id.edit_crop_done);
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                // 현재 이미지뷰에 있는 이미지를 비트맵으로 가져오기
                 BitmapDrawable bd = (BitmapDrawable)(mImageView.getDrawable());
                 Bitmap res = bd.getBitmap();
 
+                // ll : 왼쪽 x 좌표, tt : 위쪽 y좌표, rl : 너비, bt : 높이
                 int ll = currLeft, tt = currTop, rl = currRight - currLeft, bt  = currBottom - currTop;
+
+                // 가져온 비트맵의 크기를 대략적으로 초기화해준다.
                 Bitmap resultBitmap
                         = Bitmap.createBitmap(res, ll + ViewRange, tt + ViewRange,
                         rl - ViewRange * 2, bt - ViewRange * 2);
 
+                // 가로, 세로 비율에 따라 비트맵의 너비와 높이를 적절히 세팅하여 최대한 이미지가 크게 만들어준다.
                 int rHeight, rWidth;
                 if(rl < bt){
                     rHeight =  SC_MainActivity.fImageHeight - ViewRange * 2;
@@ -139,23 +152,30 @@ public class SC_ButtonFunction extends AppCompatActivity {
                     rHeight = SC_MainActivity.ImageWidth - ViewRange * 2;
                 }
 
+                // 새로운 너비와 높이로 비트맵 리사이징 후 이미지뷰에 넣기
                 resultBitmap = resizeBitmapImage(resultBitmap, rWidth, rHeight);
                 mImageView.setImageBitmap(resultBitmap);
                 SC_MainActivity.ImageWidth = rWidth;
                 SC_MainActivity.ImageHeight = rHeight;
+
+                //crop 뷰 닫고 다시 edit 뷰로 돌아오고 선택 영역 지우기
                 buttonGroup.removeViewAt(1);
                 buttonGroup.getChildAt(0).setVisibility(View.VISIBLE);
                 canvas.drawRect(0, 0, CanvasWidth, CanvasHeight, paints[0]);
 
+                // 이전 작업 되돌리기, 앞으로 가기 기능을 위해 list에 현재 비트맵을 넣어준다.
                 sc_imageEditActivity.prevList.add(resultBitmap);
                 sc_imageEditActivity.prevListIdx = sc_imageEditActivity.prevList.size();
             }
         });
 
+        // 닫기 버튼 클릭.
         ImageButton close = v.findViewById(R.id.edit_crop_close);
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                // crop 뷰를 닫고 edit 뷰로 되돌아온다. 선택 영역도 제거
                 buttonGroup.removeViewAt(1);
                 buttonGroup.getChildAt(0).setVisibility(View.VISIBLE);
                 canvas.drawRect(0, 0, CanvasWidth, CanvasHeight, paints[0]);
@@ -166,28 +186,33 @@ public class SC_ButtonFunction extends AppCompatActivity {
     // CROP 기능을 위한 선택 영역 표현
     private void makePaints(){
 
+        // 선택영역 제거 및 지나간 흔적 지우기 위한 페인트
         Paint clearPaint = new Paint();
         clearPaint.setColor(Color.TRANSPARENT);
         Xfermode xmode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
         clearPaint.setXfermode(xmode);
 
+        //흐릿한 효과를 위한 페인트
         Paint backgroundPaint = new Paint();
         backgroundPaint.setAntiAlias(true);
         backgroundPaint.setColor(Color.BLACK);
         backgroundPaint.setAlpha(100);
 
+        // 선택영역 테두리
         Paint StrokePaint = new Paint();
         StrokePaint.setStyle(Paint.Style.STROKE);
         StrokePaint.setStrokeCap(Paint.Cap.ROUND);
         StrokePaint.setColor(Color.WHITE);
         StrokePaint.setStrokeWidth(3);
 
+        // 선택 영역 안쪽 흐릿한 효과 없애기 위한 페인트
         Paint FillPaint = new Paint();
         FillPaint.setStyle(Paint.Style.FILL);
         FillPaint.setColor(Color.TRANSPARENT);
         Xfermode FillMode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
         FillPaint.setXfermode(FillMode);
 
+        // 네개의 동그란 모서리
         Paint circlePaint = new Paint();
         circlePaint.setStyle(Paint.Style.FILL);
         circlePaint.setColor(Color.WHITE);
@@ -197,8 +222,11 @@ public class SC_ButtonFunction extends AppCompatActivity {
         };
     }
 
+    // 캔버스 그리기
     private void setCanvas(int width, int height){
 
+        // 동그란 모서리가 안짤리게 선택 영역을 캔버스 크기에서 조금 작게 만들기 위한 ViewRange
+        // 동그라미가 작으면 터치가 안될 수 있으니 터치 영역을 조금 크게 만들기 위한 touchRange
         ViewRange = SC_MainActivity.fImageWidth / 30 / 2;
         TouchRange = SC_MainActivity.fImageWidth / 30 * 2;
 
@@ -220,7 +248,7 @@ public class SC_ButtonFunction extends AppCompatActivity {
             blX = ViewRange; blY = CanvasHeight - ViewRange;
             brX = CanvasWidth - ViewRange; brY = CanvasHeight - ViewRange;
         }
-        // 가로가 꽉 찰 때
+        // 선택 영역의 너비 비율이 좀 더 클 때 리사이징
         else if(ImgWidth / width < ImgHeight / height){
 
             int half = ImgHeight / 2;
@@ -230,7 +258,7 @@ public class SC_ButtonFunction extends AppCompatActivity {
             blX = ViewRange; blY = half + h / 2;
             brX = CanvasWidth - ViewRange; brY = half + h / 2;
         }
-        // 세로가 꽉 찰 때
+        // 선택 영역의 높이 비율이 좀 더 클 때 리사이징
         else if(ImgWidth / width > ImgHeight / height){
 
             int half = ImgWidth / 2;
@@ -240,22 +268,27 @@ public class SC_ButtonFunction extends AppCompatActivity {
             blX = half - w / 2; blY = CanvasHeight - ViewRange;
             brX = half + w / 2; brY = CanvasHeight - ViewRange;
         }
-        // 비율이 같을 때
+        // 너비와 높이의 비율이 같을 때 리사이징
         else{
             tlX = ViewRange; tlY = ViewRange;
             trX = CanvasWidth - ViewRange; trY = ViewRange;
             blX = ViewRange; blY = CanvasHeight - ViewRange;
             brX = CanvasWidth - ViewRange; brY = CanvasHeight - ViewRange;
         }
+
+        //초기 좌표 설정. curr 좌표들은 터치할 때마다 계속 변경된다.
         currTop = tlY; currLeft = tlX; currBottom = brY; currRight = brX;
 
+        // 캔버스를 그리기 위한 비트맵. 색은 투명으로 만든다.(canvas.drawColor(0))
         cropBitmap = Bitmap.createBitmap(CanvasWidth, CanvasHeight, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(cropBitmap);
         canvas.drawColor(0);
 
+        // 일단 캔버스 깨끗히 지우고 흐릿한 효과 주기
         canvas.drawRect(0, 0, CanvasWidth, CanvasHeight, paints[0]);
         canvas.drawRect(0, 0, CanvasWidth, CanvasHeight, paints[1]);
 
+        // 선택 영역 그리기
         canvas.drawRect(tlX, tlY, brX, brY, paints[2]);
         canvas.drawRect(tlX, tlY, brX, brY, paints[3]);
         canvas.drawCircle(tlX, tlY, ViewRange, paints[4]);
@@ -265,6 +298,7 @@ public class SC_ButtonFunction extends AppCompatActivity {
         canvasView.setImageBitmap(cropBitmap);
     }
 
+    // 선택 영역 자유 변형 클릭
     private void crop_FreeClick(){
         canvasView.setOnTouchListener(new View.OnTouchListener(){
 
@@ -273,13 +307,11 @@ public class SC_ButtonFunction extends AppCompatActivity {
 
                 if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
 
+                    // 현재 터치하고 있는 좌표 받아오기
                     int x = (int)motionEvent.getX();
                     int y = (int)motionEvent.getY();
 
-                    System.out.println(x + ", " + y);
-                    System.out.println(currLeft - TouchRange);
-                    System.out.println(currBottom - TouchRange);
-
+                    // 이미지 안쪽을 터치하고 있을 때 작동
                     if(x >= 0 && y >= 0 && x <= SC_MainActivity.ImageWidth && y <= SC_MainActivity.ImageHeight) {
 
                         // 왼쪽 위 모서리 찍을 때
@@ -304,20 +336,23 @@ public class SC_ButtonFunction extends AppCompatActivity {
                         } else {
                             DrawStatus = "outer";
                         }
-                        System.out.println(DrawStatus);
                     }
                 }
 
+                // 터치한 후 손가락을 움직일 때
                 if(motionEvent.getAction() == MotionEvent.ACTION_MOVE){
 
+                    // 일단 좌표를 받아온 후
                     int x = (int)motionEvent.getX();
                     int y = (int)motionEvent.getY();
 
+                    //누르고 있는 좌표가 캔버스 밖이라면 터치하는 좌표가 안쪽 끝으로 되게끔 터치하고 있는 좌표 강제 재설정
                     if(x < ViewRange) x = ViewRange;
                     if(x > CanvasWidth - ViewRange) x = CanvasWidth - ViewRange;
                     if(y < ViewRange) y = ViewRange;
                     if(y > CanvasHeight - ViewRange) y = CanvasHeight - ViewRange;
 
+                    // 터치하는 위치에 따라 curr 좌표가 바뀌면서
                     if (!DrawStatus.equals("inner") && !DrawStatus.equals("outer")) {
 
                         if (DrawStatus.equals("LeftTop")) {
@@ -334,6 +369,8 @@ public class SC_ButtonFunction extends AppCompatActivity {
                             currBottom = y;
                         }
 
+                        // 선택 영역 다시 그리기. 캔버스 안 지우면 뒤에 이전 선택 영역이 계속 남아서 움직일 때마다 캔버스 완전 지우고 선택 영역 그리고를
+                        // 반복한다. (애니메이션 만들 때 그림 여러 장을 연속적으로 움직이는 거라 생각하면 이해하기 조금 편함)
                         canvas.drawRect(0, 0, CanvasWidth, CanvasHeight, paints[0]);
                         canvas.drawRect(0, 0, CanvasWidth, CanvasHeight, paints[1]);
                         canvas.drawRect(currLeft, currTop, currRight, currBottom, paints[2]);
@@ -344,6 +381,7 @@ public class SC_ButtonFunction extends AppCompatActivity {
                         canvas.drawCircle(currRight, currTop, ViewRange, paints[4]);
                         canvas.drawCircle(currRight, currBottom, ViewRange, paints[4]);
 
+                        // 캔버스 변경 알리는 건데, 동작하는지는 테스트 따로 안해봤고 일단 냅둠
                         canvasView.invalidate();
                         canvasView.setImageBitmap(cropBitmap);
                     }
@@ -354,6 +392,7 @@ public class SC_ButtonFunction extends AppCompatActivity {
         });
     }
 
+    // 비율 일정 변형 부분인데 위에랑 다른 부분은 똑같고 주석 긴 부분만 대충 이해하면 될 듯
     int prevX = 0, prevY = 0;
     private void crop_NoneFreeClick(final int width, final int height){
 
@@ -551,40 +590,49 @@ public class SC_ButtonFunction extends AppCompatActivity {
 
     // background (SC_ImageEditActivity의 sc_edit_imageview)에 불러온 배경을 깔기 전에 합성할 이미지를 BGbitmap에 저장
     public                  Bitmap                  BGBitmap;
-    public                  int                     returnOriginalWidth;
-    public                  int                     returnOriginalHeight;
     // 백그라운드 버튼 클릭
     public void backgroundButtonClick(){
 
+        // 인플레이터로 뷰 동적 생성 및 commonButtonClick에서 뷰 디자인 대략적으로 구성
         View v = inflater.inflate(R.layout.sc_edit_background, null);
         commonButtonClick(v);
 
+        // 합성할 이미지 가져온 후 배경이 들어갈 이미지 뷰를 일단 깨끗하게 지우기. 이후 합성할 이미지의 크기 조절 영역을 위한 캔버스 초기화
         BGBitmap = ((BitmapDrawable)mImageView.getDrawable()).getBitmap();
-
         mImageView.setImageBitmap(null);
         setCanvas();
 
+        // 완료 버튼 클릭
         ImageButton done = v.findViewById(R.id.edit_background_done);
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                // 일단 캔버스에 작업한 내용이 남아있지 않게 깨끗하게 지우고
+                // 배경으로 쓸 이미지 (b)와 합성할 이미지를 해당 캔버스에 같이 붙여버린다.
+                // 이 때 new Rect를 이용해서 배경과 합성할 이미지의 위치까지 제대로 세팅되게 만들어준다.
                 canvas.drawRect(0, 0, SC_MainActivity.fImageWidth, SC_MainActivity.fImageHeight, paintsForBackground[0]);
                 Bitmap b = ((BitmapDrawable)mImageView.getDrawable()).getBitmap();
                 canvas.drawBitmap(b, null, new Rect(0, 0, SC_MainActivity.fImageWidth, SC_MainActivity.fImageHeight), null);
                 canvas.drawBitmap(BGBitmap, null, new Rect(currLeft, currTop, currRight, currBottom), null);
 
+                // canvas는 backgroundBitmap이라는 도화지를 깔아놓고, 해당 도화지에 위에서 drawBitmap으로 이미지를 합성시킨 것.
+                // 작업한 후에는 캔버스뷰에 해당 합성이미지를 넘겨준다.
                 canvasView.setImageBitmap(backgroundBitmap);
 
+                // 이제 캔버스뷰에 있는 합성 이미지를 결과를 출력하기 위한 mImageView에 최종적으로 띄워주고, 캔버스뷰는 다시 깨끗하게 지워준다.
                 Bitmap resultBitmap = ((BitmapDrawable)canvasView.getDrawable()).getBitmap();
                 canvasView.setImageBitmap(null);
                 mImageView.setImageBitmap(resultBitmap);
 
+                // 되돌리기 및 재실행 기능을 위해 합성 이미지를 prevList에 넣어준다
                 sc_imageEditActivity.prevList.add(resultBitmap);
                 sc_imageEditActivity.prevListIdx = sc_imageEditActivity.prevList.size();
 
                 SC_MainActivity.ImageWidth = SC_MainActivity.fImageWidth;
                 SC_MainActivity.ImageHeight = SC_MainActivity.fImageHeight;
 
+                // 배경합성 버튼 뷰를 끄고 edit 뷰로 되돌아오기
                 buttonGroup.removeViewAt(1);
                 buttonGroup.getChildAt(0).setVisibility(View.VISIBLE);
             }
@@ -596,6 +644,7 @@ public class SC_ButtonFunction extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                // 캔버스에서 작업하던거 다 지우고 원래 이미지를 이미지뷰에 띄우고 편집 뷰로 되돌아오기
                 buttonGroup.removeViewAt(1);
                 buttonGroup.getChildAt(0).setVisibility(View.VISIBLE);
                 canvasView.setImageBitmap(null);
@@ -610,10 +659,12 @@ public class SC_ButtonFunction extends AppCompatActivity {
             ImageButton button = (ImageButton) frameLayout.getChildAt(0);
             // 맨 처음 버튼 (갤러리에서 가져오기 버튼) 클릭
             if(i == 0){
+
                 Bitmap b = getThumbnail();
                 Bitmap resultBitmap = resizeBitmapImage(b, 128, 128);
                 button.setImageBitmap(resultBitmap);
 
+                // 해당 버튼을 누르면 갤러리로 접근해서 맨 처음의 이미지를 썸네일로 띄워주게 됨
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -621,12 +672,14 @@ public class SC_ButtonFunction extends AppCompatActivity {
                     }
                 });
             }
+            // 나머지 미리 넣어둔 배경 가져오기 버튼 (128x128 사이즈로)
             else{
                 Drawable drawable = button.getDrawable();
                 Bitmap b = ((BitmapDrawable)drawable).getBitmap();
                 Bitmap resultBitmap = resizeBitmapImage(b, 128, 128);
                 button.setImageBitmap(resultBitmap);
 
+                // backgroundIds는 drawable 폴더에 이미지의 경로 (id)를 미리 담아둔 배열. 해당 경로를 통해 R.drawable.(id)를 가져와서 배경으로 깐다.
                 final int idx = i - 1;
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -662,6 +715,9 @@ public class SC_ButtonFunction extends AppCompatActivity {
         return null;
     }
 
+    // 합성할 이미지 크기 조절 영역을 위한 캔버스 세팅.
+    // 위의 선택 영역 표현과 크게 다를 게 없지만, 이미지 가운데를 터치해서 끌고 다니면 좌표를 이동시킬 수 있는 기능이 추가됨.
+    // 크기 조절은 선택영역의 free와 같은 방식으로 동작
     public void setCanvas(){
 
         int centerX, centerY;
@@ -686,6 +742,8 @@ public class SC_ButtonFunction extends AppCompatActivity {
         canvas = new Canvas(backgroundBitmap);
         canvas.drawColor(0);
 
+        // 여기서 위의 crop의 선택 영역과 페인트가 조금 다른데, crop의 선택 영역은 일단 캔버스를 지우고 선택 영역의 안은 투명하게 그럈지만,
+        // 여기서는 선택 영역 안을 합성할 이미지로 그렸다는 점
         canvas.drawBitmap(BGBitmap, null, new Rect(tlX, tlY, brX, brY), null);
         canvas.drawRect(tlX, tlY, brX, brY, paintsForBackground[1]);
         canvas.drawCircle(tlX, tlY, ViewRange, paintsForBackground[3]);
@@ -769,10 +827,14 @@ public class SC_ButtonFunction extends AppCompatActivity {
                         canvasView.invalidate();
                         canvasView.setImageBitmap(backgroundBitmap);
                     }
+                    // 위는 crop의 선택 영역 모서리 찍는 것과 똑같고, 여기서부터는 이미지 안쪽을 누르고 사진을 원하는 위치로 이동시키기 위한 기능
                     else if(DrawStatus.equals("inner")){
 
+                        // curr의 좌우 좌표와 상하 좌표가 손가락이 움직이는 방향과 대략적으로 비슷하게 직선이동을 하게끔 구현
                         currLeft = currLeft + x - prevX; currRight = currRight + x - prevX;
                         currTop = currTop + y - prevY;  currBottom = currBottom + y - prevY;
+
+                        // 이 때 상하좌우 좌표가 배경 영역 밖을 벗어난다면 벗어나지 않는 가장 끝쪽으로 고정되게 좌표 강제 재설정
                         if(currLeft < ViewRange || currLeft > SC_MainActivity.fImageWidth - ViewRange
                                 || currRight < ViewRange || currRight > SC_MainActivity.fImageWidth - ViewRange){
                             currLeft = currLeft - (x - prevX); currRight = currRight - (x - prevX);
@@ -782,6 +844,7 @@ public class SC_ButtonFunction extends AppCompatActivity {
                             currTop = currTop - (y - prevY); currBottom = currBottom - (y - prevY);
                         }
 
+                        // 역시 움직일 때마다 영역 깨끗하게 지우고 다시 그려주는 방식으로 표현
                         canvas.drawRect(0, 0, SC_MainActivity.fImageWidth, SC_MainActivity.fImageHeight, paintsForBackground[0]);
                         canvas.drawBitmap(BGBitmap, null, new Rect(currLeft, currTop, currRight, currBottom), null);
                         canvas.drawRect(currLeft, currTop, currRight, currBottom, paintsForBackground[1]);
@@ -801,6 +864,7 @@ public class SC_ButtonFunction extends AppCompatActivity {
         });
     }
 
+    // drawable의 경로 초기화
     private void setBackgroundPath(){
 
         backgroundIds = new int[]{
@@ -811,23 +875,27 @@ public class SC_ButtonFunction extends AppCompatActivity {
     // 배경 합성을 위한 페인트
     private void makeBackgroundPaint(){
 
+        // 캔버스 지우기 페인트
         Paint clearPaint = new Paint();
         clearPaint.setColor(Color.TRANSPARENT);
         Xfermode xmode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
         clearPaint.setXfermode(xmode);
 
+        // 그림 크기 조절 영역 테두리 그리기
         Paint StrokePaint = new Paint();
         StrokePaint.setStyle(Paint.Style.STROKE);
         StrokePaint.setStrokeCap(Paint.Cap.ROUND);
         StrokePaint.setColor(Color.WHITE);
         StrokePaint.setStrokeWidth(3);
 
+        // 안쪽 깨끗하게 지우기인데 이거 복붙하면서 필요없는 거 안지웠네. 아마 쓰는 부분이 없을 거 같긴한데 괜히 지웠다가 귀찮아질 수 있으니 걍 냅둬보기.
         Paint FillPaint = new Paint();
         FillPaint.setStyle(Paint.Style.FILL);
         FillPaint.setColor(Color.TRANSPARENT);
         Xfermode FillMode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
         FillPaint.setXfermode(FillMode);
 
+        // 모서리 둥글게 페인트
         Paint circlePaint = new Paint();
         circlePaint.setStyle(Paint.Style.FILL);
         circlePaint.setColor(Color.WHITE);
@@ -844,8 +912,12 @@ public class SC_ButtonFunction extends AppCompatActivity {
 
 
     // 회전 기능 관련 영역..............................................................................
+
     // 회전은 opencv로 하지 않으면 상당히 메모리를 많이 먹게 되어 연속적으로 한다면 앱이 꺼짐.
     // seekBar를 이용해서 하는 건 포기
+
+
+    // 이 정도 코드는 아마 설명 안해도 충분히 이해할 수 있을거라 생각함. 어려운게 아니라... 모르는거 있으면 물어보고.
 
     public Bitmap rotateBitmap;
     public Bitmap originalRotateBitmap;
@@ -854,6 +926,8 @@ public class SC_ButtonFunction extends AppCompatActivity {
         View v = inflater.inflate(R.layout.sc_edit_rotate, null);
         commonButtonClick(v);
 
+
+        // 이거 seekbar로 회전 각도 조절하는건데 너무 느려서 이걸로는 포기. 궁금하면 아래 주석 펼쳐보기
 //        sc_imageEditActivity.rotateSeekBar = v.findViewById(R.id.edit_seekbar);
 //        sc_imageEditActivity.rotateSeekBarText = v.findViewById(R.id.edit_seekbar_text);
 //
@@ -930,7 +1004,6 @@ public class SC_ButtonFunction extends AppCompatActivity {
 
 
     // 필터 기능 관련 영역..............................................................................
-
     Bitmap filterBitmap;
     public void filterButtonClick(){
 
