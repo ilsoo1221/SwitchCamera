@@ -1,3 +1,3 @@
-include ':sdk'
+include ':sdk1'
 include ':app'
 rootProject.name = "SwitchCamera"

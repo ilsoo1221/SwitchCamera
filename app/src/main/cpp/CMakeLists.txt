@@ -7,9 +7,9 @@ cmake_minimum_required(VERSION 3.10.2)
 
 # Declares and names the project.
 
-project("switch_example")
+project("SwitchCamera")
 # 경로 수정할 것
-set(pathOPENCV C:/Users/user/AndroidStudioProjects/SwitchCamera/sdk)
+set(pathOPENCV /Users/singiyeol/AndroidStudioProjects/OpenCV-android-sdk/sdk1)
 set(pathLIBOPENCV ${pathOPENCV}/native/libs/${ANDROID_ABI}/libopencv_java3.so)
 include_directories(${pathOPENCV}/native/jni/include)
 # Creates and names a library, sets it as either STATIC
@@ -25,7 +25,7 @@ add_library( # Sets the name of the library.
         SHARED
 
         # Provides a relative path to your source file(s).
-        native-lib.cpp )
+        code/native-lib.cpp)
 add_library( # Sets the name of the library.
         JNIDriver
 
@@ -33,7 +33,7 @@ add_library( # Sets the name of the library.
         SHARED
 
         # Provides a relative path to your source file(s).
-        JNIDriver.c)
+        code/JNIDriver.c)
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
